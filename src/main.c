@@ -1,3 +1,4 @@
+#include "comport.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -10,6 +11,8 @@ int main()
 	// Project > Linker > Input > Additional Dependencies > edit
 	XINPUT_CAPABILITIES capabilities;
 	XInputGetCapabilities(0, XINPUT_FLAG_GAMEPAD, &capabilities);
+
+	COMPORT* port = portOpen(9);
 
 	while (1)
 	{
@@ -34,6 +37,14 @@ int main()
 		float R = (V + W) / 2;
 		float L = (V - W) / 2;
 
-		printf("l: %f r: %f              \r", L, R);
+		signed char r = (signed char)(R / 101 * 127);
+		signed char l = (signed char)(L / 101 * 127);
+
+		printf("l: %i r: %i              \r", l, r);
+
+		portWriteByte(port, l);
+		portWriteByte(port, r);
+
+		Sleep(16);
 	}
 }

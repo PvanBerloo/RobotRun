@@ -3,10 +3,11 @@ project(RobotRun LANGUAGES C)
 
 set(source_files
 	${PROJECT_SOURCE_DIR}/src/main.c
+	${PROJECT_SOURCE_DIR}/src/comport.c
 )
 
 set(header_files
-	#${PROJECT_SOURCE_DIR}/inc/header.h
+	${PROJECT_SOURCE_DIR}/inc/comport.h
 )
 
 add_executable(RobotRunConsole ${source_files} ${header_files})
