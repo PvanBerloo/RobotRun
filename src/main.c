@@ -1,4 +1,6 @@
-#include "comport.h"
+
+#include "serial.h"
+#include "communication.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -7,14 +9,39 @@
 
 int main()
 {
-	// You need to link to Xinput.lib to use these functions:
-	// Project > Linker > Input > Additional Dependencies > edit
-	XINPUT_CAPABILITIES capabilities;
-	XInputGetCapabilities(0, XINPUT_FLAG_GAMEPAD, &capabilities);
+	serialOpen(9);
 
-	COMPORT* port = portOpen(9);
+	// clear serial buffer by reading all bytes left.
+	while (serialBytesAvailable() > 0)
+	{
+		serialReadByte();
+	}
 
+	sendOrderPickMessage(3, 7);
+	
 	while (1)
+	{
+		Message message = readMessage();
+
+		switch (message.type)
+		{
+		case MESSAGE_STARTUP:
+			printf("De robot is opgestart.\n");
+			break;
+
+		case MESSAGE_ASKFORINSTRUCTION:
+			printf("De robot wil een commando.\n");
+			break;
+
+		default:
+			printf("Onbekend bericht type\n");
+			break;
+		}
+	}
+
+	return 0;
+
+	/*while (1)
 	{
 		XINPUT_STATE state;
 		XInputGetState(0, &state);
@@ -46,5 +73,5 @@ int main()
 		portWriteByte(port, r);
 
 		Sleep(16);
-	}
+	}*/
 }
